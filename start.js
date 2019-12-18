@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
     user: "root",
 
     // Your password
-    password: "ZXCvbnASD!12345",
+    password: "Silver75",
     database: "employees_DB"
 });
 
@@ -63,11 +63,11 @@ function runSearch() {
                 case "Add Department":
                     addDepartment();
                     break;
-                
+
                 case "Update Employee Roles":
                     updateEmRole();
                     break;
-    
+
 
 
                 case "Find artists with a top song and top album in the same year":
@@ -77,24 +77,62 @@ function runSearch() {
         });
 }
 
-function employeePrint(){
+function employeePrint() {
     var query = 'SELECT e.id, e.first_name, e.last_name, role.title, department.name AS department, role.salary, CONCAT( m.first_name, " ", m.last_name ) AS manager'
     query += ' FROM employee e INNER JOIN role on e.role_id = role.id INNER JOIN department on role.department_id = department.id LEFT JOIN employee m ON e.manager_id = m.id;';
     connection.query(query, function (err, res) {
         console.table(res)
-        // console.log('hi')
-        // console.log("id\tfirst_name\tlast_name\ttitle\tdepartment\tsalary\tmanager")
-        // console.log("--\t----------\t---------\t-----\t----------\t------\t-------")
-        // res.forEach(el => {
-        //     console.log(el.id+ "\t" +el.first_name+ "\t\t" +el.last_name+ "\t" +el.role_id+ "\t" +el.manager_id);
-        // })
-
-        // for (var i = 0; i < res.length; i++) {
-        //     console.log(res[i].artist);
-        // }
-        // runSearch();
     });
 }
+
+function rolePrint() {
+    var query = 'SELECT * FROM role;';
+    connection.query(query, function (err, res) {
+        console.table(res)
+    });
+}
+
+function departmentPrint() {
+    var query = 'SELECT * FROM department;';
+    connection.query(query, function (err, res) {
+        console.table(res)
+    });
+}
+
+function addEmployee() {
+
+    inquirer
+        .prompt([
+            {
+                name: "firstName",
+                type: "input",
+                message: "What is their first name?"
+            },
+            {
+                name: "lastName",
+                type: "input",
+                message: "What is their first name?"
+            },
+            {
+                name: "role",
+                type: "input",
+                message: "What is their role?"
+            },
+            {
+                name: "manager",
+                type: "input",
+                message: "Who is their manager?"
+            },
+
+        ]
+        )
+        .then(function (answer) {
+
+            var query = 'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES(?);';
+            connection.query(query, function (err, res) {
+                console.table(res)
+            });
+        }
 
 
 // function artistSearch() {
